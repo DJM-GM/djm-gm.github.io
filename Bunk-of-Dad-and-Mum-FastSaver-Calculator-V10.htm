@@ -1,0 +1,1347 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bunk of Dad and Mum - FastSaver Home Buying Calculator | Australia</title>
+<meta name="description" content="Free Australian calculator for Bank of Mum and Dad home buying financing with or without mortgage, with or without free rent from family, comparing saving to buy with cash only, saving to buy while renting and saving while mortgaged. Calculate savings, rent, repayments and interest for family financing arrangements." />
+<meta property="og:title" content="Bunk of Dad and Mum – FastSaver Home Buying Calculator">
+<meta property="og:description" content="Free Australian calculator: how fast can two FastSavers living rent-free buy a home outright or save a deposit? Models Bank, Rent and Mortgage scenarios month by month.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bunk-of-dad-and-mum-fastsaver.netlify.app/">
+<link rel="canonical" href="https://bunk-of-dad-and-mum-fastsaver.netlify.app/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Bunk of Dad and Mum FastSaver Calculator",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "AUD"
+  }
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: #fff;
+    color: #111;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 24px 32px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+  h2 { font-size: 1.15rem; font-weight: 400; color: #444; margin-bottom: 20px; }
+  h4 { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #333; margin: 28px 0 10px; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+  p { margin-bottom: 10px; color: #222; }
+  i { font-style: italic; }
+
+  /* Parameter / Key Results Grid */
+  .pg-grid {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .pg-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    min-height: 32px;
+  }
+  .pg-row:last-child { border-bottom: none; }
+  .pg-row:nth-child(even) { background: #f9f9f9; }
+  .pg-label {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    color: #333;
+  }
+  .pg-input-wrap {
+    padding: 3px 8px;
+    display: flex;
+    align-items: center;
+  }
+  .pg-input-wrap input {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: right;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 2px 5px;
+    width: 130px;
+    color: #111;
+  }
+  .pg-input-wrap input:focus { outline: 1px solid #888; }
+  .pg-readonly {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: right;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    padding: 2px 5px;
+    width: 130px;
+    display: inline-block;
+    color: #111;
+  }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+  button {
+    font-family: inherit;
+    font-size: 0.85rem;
+    padding: 6px 16px;
+    border: 1px solid #aaa;
+    background: #f4f4f4;
+    color: #111;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  button:hover { background: #e8e8e8; }
+
+  /* Shareable URL */
+  .url-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .url-label { font-size: 0.82rem; color: #555; white-space: nowrap; }
+  .url-field {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    flex: 1;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    padding: 3px 6px;
+    color: #333;
+    min-width: 0;
+  }
+  .copy-btn { white-space: nowrap; }
+
+  /* Error */
+  #error-msg {
+    color: #c00;
+    font-size: 0.85rem;
+    margin: 6px 0;
+    min-height: 1em;
+  }
+
+  /* Chart */
+  #chart-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  #myChart, #crosshairCanvas {
+    display: block;
+    width: 100%;
+  }
+  #crosshairCanvas {
+    position: absolute;
+    top: 0; left: 0;
+    pointer-events: none;
+  }
+  #chart-tooltip {
+    position: fixed;
+    display: none;
+    background: #fff;
+    border: 1px solid #bbb;
+    padding: 7px 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    pointer-events: none;
+    white-space: pre;
+    z-index: 100;
+    box-shadow: 1px 2px 6px rgba(0,0,0,0.12);
+  }
+
+  /* Tabs */
+  .tab-bar { display: flex; gap: 0; border-bottom: 2px solid #ccc; margin-bottom: 0; }
+  .tab-btn {
+    font-size: 0.82rem;
+    padding: 6px 16px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background: #f4f4f4;
+    color: #555;
+    cursor: pointer;
+    border-radius: 2px 2px 0 0;
+    margin-right: 3px;
+    font-family: inherit;
+  }
+  .tab-btn.active { background: #fff; color: #111; font-weight: 700; border-bottom: 2px solid #fff; margin-bottom: -2px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Tables */
+  .table-wrap {
+    max-height: 420px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.72rem;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 4px 5px;
+    text-align: right;
+    font-weight: 700;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
+    z-index: 2;
+    max-width: 70px;
+  }
+  thead th:first-child { text-align: center; }
+  td {
+    border: 1px solid #e0e0e0;
+    padding: 4px 5px;
+    text-align: right;
+    white-space: nowrap;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  td:first-child { text-align: center; font-family: inherit; }
+
+  /* Mortgage highlights */
+  tr.hl-earliest td {
+    background: #fff0ee;
+  }
+  tr.hl-earliest td:first-child { box-shadow: inset 2px 0 0 #e05050, inset 0 2px 0 #e05050, inset 0 -2px 0 #e05050; }
+  tr.hl-earliest td:last-child  { box-shadow: inset -2px 0 0 #e05050, inset 0 2px 0 #e05050, inset 0 -2px 0 #e05050; }
+  tr.hl-earliest td:not(:first-child):not(:last-child) { box-shadow: inset 0 2px 0 #e05050, inset 0 -2px 0 #e05050; }
+
+  tr.hl-last td {
+    background: #f0fff4;
+  }
+  tr.hl-last td:first-child { box-shadow: inset 2px 0 0 #4caf80, inset 0 2px 0 #4caf80, inset 0 -2px 0 #4caf80; }
+  tr.hl-last td:last-child  { box-shadow: inset -2px 0 0 #4caf80, inset 0 2px 0 #4caf80, inset 0 -2px 0 #4caf80; }
+  tr.hl-last td:not(:first-child):not(:last-child) { box-shadow: inset 0 2px 0 #4caf80, inset 0 -2px 0 #4caf80; }
+
+  /* Both: only green */
+  tr.hl-both td { background: #f0fff4; }
+  tr.hl-both td:first-child { box-shadow: inset 2px 0 0 #4caf80, inset 0 2px 0 #4caf80, inset 0 -2px 0 #4caf80; }
+  tr.hl-both td:last-child  { box-shadow: inset -2px 0 0 #4caf80, inset 0 2px 0 #4caf80, inset 0 -2px 0 #4caf80; }
+  tr.hl-both td:not(:first-child):not(:last-child) { box-shadow: inset 0 2px 0 #4caf80, inset 0 -2px 0 #4caf80; }
+
+  .intro-text { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Bunk of Dad and Mum&#8482;</h1>
+<h2>FastSaver Home Buying Calculator &mdash; Australia</h2>
+
+<div class="intro-text">
+<p>This calculator is about the Bigger Picture: with <i>FastSaving</i> and some patience, owning a home outright &mdash; or saving a large deposit in just a few months &mdash; may be well within reach.</p>
+<p></p>
+<p><i>FastSaving</i> means directing a large share of after-tax income &mdash; typically 80% &mdash; straight into savings by keeping everyday expenses small. The key is to save faster than home prices rise.
+One proven way to do this is the &ldquo;Bunk of Dad and Mum&rdquo;: parents provide rent-free accommodation to two residents (typically their adult children) while the residents save diligently, share household expenses, and cover their own costs.
+This arrangement is far less risky for the parents than the &ldquo;Bank of Mum and Dad&rdquo;, where parents gift or lend money toward a purchase &mdash; the Bunk costs the parents very little and leaves their own finances intact.</p>
+<p></p>
+<p>The Bunk works best when there is a Window of Opportunity: the residents are earning well, the family home can still comfortably accommodate everyone, and there is time before the parents downsize or need the space back. Other routes to the same outcome include employer-provided accommodation or any other low-cost living arrangement.</p>
+<p></p>
+<p>Buying without a mortgage eliminates negative equity risk entirely. It also buys time &mdash; time to understand exactly what kind of home suits your needs, and to wait for a genuine bargain rather than rushing into a purchase.
+If saving a full purchase price takes longer than you&rsquo;d like, a large deposit is the next best thing: it reduces borrowing, lowers repayments, and protects against falling prices.</p>
+<p></p>
+<p>Default example: Two <i>FastSavers</i> on average wages, saving 80% of after-tax income, could accumulate enough to buy a mortgage-free home worth around $600,000 in 48 months &mdash; or save a 20% deposit in as little as 8 months.</p>
+<p></p>
+<p>Set Term to your target month and adjust the inputs to see projected net worth, cash, and home value at end of Term.
+If you already own a home, enter its value and any outstanding mortgage &mdash; the calculator treats the equity as though the home were sold at month 0 and the proceeds added to savings.
+Browse real estate sites regularly to stay current on home and rent prices in your area.
+Vary Term, Income Saved Portion and other parameters until the results, such as living expenses, net worth, estimated home value, months to having adequate deposit are a realistic and satisfactory compromise. The parameter values are saved in the browser local storage with each Recalculate.</p>
+<p></p>
+<p>Purchase costs vary and some are hard to predict. When you are close to buying, use separate calculators for Stamp Duty, First Home Owner Grant, and Lenders Mortgage Insurance, then enter the combined figure in Buyers Up Front Costs. Add estimates for building inspections and moving costs as needed.
+There is no need to be precise &mdash; a reasonable round number is fine. It will not change the Big Picture much. <i>FastSaving</i> moves the graph far more than any reasonable cost estimate.</p>
+<p></p>
+<p>&ldquo;Isn&rsquo;t saving 80% the same as mortgage stress?&rdquo; For most people, a mortgage consuming 80% of income is stressful. <i>FastSavers</i> are different: they have chosen this path, they are building wealth rather than servicing debt, and they learn to live well on less by spending only on what they need and finding the best available value.</p>
+<p></p>
+<p>Uses Australian resident income tax rates for FY 2024&ndash;25 and 2025&ndash;26, including LITO and Medicare levy.<br>
+All inputs and results are estimates &mdash; treat them as informed guesstimates, not financial advice.</p>
+<p></p>
+<p>Tables can be copied and pasted into spreadsheets.<br>
+To print: File &gt; Print (or Ctrl+P / Cmd+P). Select &ldquo;Print Selection&rdquo;. Save as PDF.</p>
+</div>
+
+<h4>Parameters</h4>
+<div class="pg-grid" id="param-grid">
+  <div class="pg-row">
+    <div class="pg-label" id="lbl-tm" style="width:50%">Term (months)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-tm" value="48"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Combined Savings at Month 0 ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-cs" value="10000"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Resident 1 Gross Annual Income ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-r1" value="100000"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Resident 2 Gross Annual Income ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-r2" value="100000"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Income Saved Portion (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-sp" value="80"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Combined Saved Net Income Annual Growth Rate (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-ig" value="5"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Bank Annual Interest Rate (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-bi" value="5"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Bank Interest Tax Rate (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-bt" value="30"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Home Value Deposit Portion (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-dp" value="20"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Mortgage Annual Interest Rate (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-mi" value="6"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">APRA Serviceability Buffer (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-sb" value="3"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Existing Home Value ($) (if 0, affordable value will be estimated)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-hv" value="0"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Existing Mortgage Principal ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-mp" value="0"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Buyers Up Front Costs ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-uc" value="10000"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Home Value Annual Growth Rate (%)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-hg" value="5"></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Rent Expense Annually ($) (additional to non-rent expenses)</div>
+    <div class="pg-input-wrap" style="width:50%"><input type="number" id="inp-re" value="25000"></div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button type="button" id="btn-restore">Restore Defaults</button>
+  <button type="button" id="btn-calc">Recalculate</button>
+</div>
+<div id="error-msg"></div>
+<div class="url-row">
+  <span class="url-label">Shareable URL:</span>
+  <input type="text" class="url-field" id="shareable-url" readonly>
+  <button type="button" class="copy-btn" id="btn-copy">Copy</button>
+</div>
+
+<h4>Key Results</h4>
+<div class="pg-grid" id="results-grid">
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Bank Living Expense at Month 0 ($/month)</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-living">—</span></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Bank Home Price at Month 0 (estimated $)</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-bank-hp0">—</span></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Mortgage Home Price at Month 0 (estimated $)</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-mort-hp0">—</span></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Earliest Month Mortgage Deposit Available</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-earliest">—</span></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Bank Net Worth at Month Term ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-bank-nw">—</span></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Rent Net Worth at Month Term ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-rent-nw">—</span></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">Mortgage Net Worth at Month Term ($)</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-mort-nw">—</span></div>
+  </div>
+  <div class="pg-row">
+    <div class="pg-label" style="width:50%">First Month Rent Net Worth &ge; Mortgage Deposit Price</div>
+    <div class="pg-input-wrap" style="width:50%"><span class="pg-readonly" id="res-rentcross">—</span></div>
+  </div>
+</div>
+
+<h4>Graph</h4>
+<div id="chart-container">
+  <canvas id="myChart"></canvas>
+  <canvas id="crosshairCanvas"></canvas>
+</div>
+<div id="chart-tooltip"></div>
+
+<div class="tab-bar">
+  <button type="button" class="tab-btn active" data-tab="tab-bank">Bank Scenario</button>
+  <button type="button" class="tab-btn" data-tab="tab-rent">Rent Scenario</button>
+  <button type="button" class="tab-btn" data-tab="tab-mortgage">Mortgage Scenario</button>
+</div>
+
+<div id="tab-bank" class="tab-panel active">
+  <div class="table-wrap"><table id="tbl-bank"></table></div>
+</div>
+<div id="tab-rent" class="tab-panel">
+  <div class="table-wrap"><table id="tbl-rent"></table></div>
+</div>
+<div id="tab-mortgage" class="tab-panel">
+  <div class="table-wrap"><table id="tbl-mortgage"></table></div>
+</div>
+
+<h4>Other Methods</h4>
+<p>For different calculations with nearly the same result, the Future Value of savings with
+the monthly bank deposit increasing and earning monthly interest can be calculated using
+the Growing Annuity formula and the Continuous Compounding formula.
+Both are close approximations to the iterative transaction calculation of the bank balance.
+Not so good at calculating the bank &mdash; mortgage &mdash; offset balances.</p>
+
+<script>
+// ============================================================
+// DEFAULTS
+// ============================================================
+const DEFAULTS = {
+  tm: 48, cs: 10000, r1: 100000, r2: 100000,
+  sp: 80, ig: 5, bi: 5, bt: 30, dp: 20, mi: 6,
+  sb: 3, hv: 0, mp: 0, uc: 10000, hg: 5, re: 25000
+};
+const LOCAL_STORAGE_KEY = 'bodm_params_p17';
+const URL_KEYS = ['tm','cs','r1','r2','sp','ig','bi','bt','dp','mi','sb','hv','mp','uc','hg','re'];
+
+// ============================================================
+// AUSTRALIAN INCOME TAX (FY 2024-25 and 2025-26)
+// ============================================================
+function calcNetAnnualIncome(gross) {
+  // Tax brackets FY 2024-25 / 2025-26
+  let tax = 0;
+  if (gross <= 18200) {
+    tax = 0;
+  } else if (gross <= 45000) {
+    tax = (gross - 18200) * 0.19;
+  } else if (gross <= 120000) {
+    tax = 5092 + (gross - 45000) * 0.325;
+  } else if (gross <= 180000) {
+    tax = 29467 + (gross - 120000) * 0.37;
+  } else {
+    tax = 51667 + (gross - 180000) * 0.45;
+  }
+  // LITO
+  let lito = 0;
+  if (gross <= 37500) {
+    lito = 700;
+  } else if (gross <= 45000) {
+    lito = 700 - (gross - 37500) * 0.05;
+  } else if (gross <= 66667) {
+    lito = 325 - (gross - 45000) * 0.015;
+  } else {
+    lito = 0;
+  }
+  tax = Math.max(0, tax - lito);
+  // Medicare levy 2%
+  let medicare = 0;
+  if (gross > 26000) {
+    medicare = gross * 0.02;
+  } else if (gross > 23226) {
+    medicare = (gross - 23226) * 0.1;
+  }
+  tax += medicare;
+  return gross - tax;
+}
+
+// ============================================================
+// PresentValue
+// ============================================================
+function PresentValue(rate, term, payment, futureValue) {
+  if (term <= 0) return 0;
+  if (Math.abs(rate) < 1e-12) return payment * term + futureValue;
+  return payment * (1 - Math.pow(1 + rate, -term)) / rate + futureValue / Math.pow(1 + rate, term);
+}
+
+// ============================================================
+// MAIN CALCULATION
+// ============================================================
+let lastCalc = null;
+
+function calculate(p) {
+  const TermMonths = p.tm;
+  const FirstMonth = 0;
+  const FinalMonth = TermMonths - 1;
+
+  const Res1Net = calcNetAnnualIncome(p.r1);
+  const Res2Net = calcNetAnnualIncome(p.r2);
+  const IncomeSavedPortion = p.sp / 100;
+  const CombinedSavedNetIncomeAnnualGrowthRate = p.ig / 100;
+  const BankAnnualInterestRate = p.bi / 100;
+  const BankInterestTaxRate = p.bt / 100;
+  const HomeValueDepositPortion = p.dp / 100;
+  const MortgageAnnualInterestRate = p.mi / 100;
+  const APRAServiceabilityBuffer = p.sb / 100;
+  const HomeValueAnnualGrowthRate = p.hg / 100;
+  const BuyersUpFrontCosts = p.uc;
+  const RentExpenseAnnually = p.re;
+
+  let ExistingHomeValueParamCopy = Math.max(0, p.hv);
+  let ExistingMortgagePrincipalParamCopy = Math.max(0, p.mp);
+  ExistingMortgagePrincipalParamCopy = Math.min(ExistingHomeValueParamCopy, ExistingMortgagePrincipalParamCopy);
+
+  const BankStartingSavings = p.cs + Math.max(0, ExistingHomeValueParamCopy - ExistingMortgagePrincipalParamCopy);
+
+  // Shared income arrays
+  const CombinedNetIncome = new Array(TermMonths);
+  const CombinedSavedNetIncome = new Array(TermMonths);
+  const RentExpenseAccount = new Array(TermMonths);
+  const CombinedSavedNetIncomeAfterRent = new Array(TermMonths);
+
+  CombinedNetIncome[0] = (Res1Net + Res2Net) / 12;
+  CombinedSavedNetIncome[0] = IncomeSavedPortion * (Res1Net + Res2Net) / 12;
+
+  for (let m = 1; m < TermMonths; m++) {
+    const g = Math.pow(1 + CombinedSavedNetIncomeAnnualGrowthRate, m / 12);
+    CombinedNetIncome[m] = g * CombinedNetIncome[0];
+    CombinedSavedNetIncome[m] = g * CombinedSavedNetIncome[0];
+  }
+  for (let m = 0; m < TermMonths; m++) {
+    const g = Math.pow(1 + CombinedSavedNetIncomeAnnualGrowthRate, m / 12);
+    RentExpenseAccount[m] = g * (RentExpenseAnnually / 12);
+    CombinedSavedNetIncomeAfterRent[m] = Math.max(0, CombinedSavedNetIncome[m] - RentExpenseAccount[m]);
+  }
+
+  // ---- BANK SCENARIO ----
+  const Bank_NetIncomeAccount = new Array(TermMonths);
+  const Bank_LivingExpenseAccount = new Array(TermMonths);
+  const Bank_SavedIncomeAccount = new Array(TermMonths);
+  const Bank_InterestIncomeAccount = new Array(TermMonths);
+  const Bank_TaxAccount = new Array(TermMonths);
+  const Bank_BuyersUpFrontCostsAccount = new Array(TermMonths).fill(0);
+  const Bank_SavingsAccount = new Array(TermMonths);
+  const Bank_NetWorthAccount = new Array(TermMonths);
+  const Bank_HomePrice = new Array(TermMonths);
+
+  for (let m = 0; m < TermMonths; m++) {
+    Bank_NetIncomeAccount[m] = CombinedNetIncome[m];
+    Bank_LivingExpenseAccount[m] = (1 - IncomeSavedPortion) * CombinedNetIncome[m];
+    Bank_SavedIncomeAccount[m] = CombinedSavedNetIncome[m];
+    Bank_InterestIncomeAccount[m] = (m === 0) ? 0 : (BankAnnualInterestRate / 12) * Bank_SavingsAccount[m - 1];
+    Bank_TaxAccount[m] = BankInterestTaxRate * Bank_InterestIncomeAccount[m];
+    Bank_BuyersUpFrontCostsAccount[m] = (m === FinalMonth) ? BuyersUpFrontCosts : 0;
+    const prev = (m === 0) ? BankStartingSavings : Bank_SavingsAccount[m - 1];
+    Bank_SavingsAccount[m] = prev + Bank_SavedIncomeAccount[m] + Bank_InterestIncomeAccount[m] - Bank_TaxAccount[m] - Bank_BuyersUpFrontCostsAccount[m];
+    Bank_NetWorthAccount[m] = Bank_SavingsAccount[m];
+  }
+  for (let m = 0; m < TermMonths; m++) {
+    Bank_HomePrice[m] = Math.pow(1 + HomeValueAnnualGrowthRate, (m - FinalMonth) / 12) * Bank_SavingsAccount[FinalMonth];
+  }
+
+  // ---- RENT SCENARIO ----
+  const Rent_NetIncomeAccount = new Array(TermMonths);
+  const Rent_LivingExpenseAccount = new Array(TermMonths);
+  const Rent_RentExpenseAccount = new Array(TermMonths);
+  const Rent_SavedIncomeAccount = new Array(TermMonths);
+  const Rent_InterestIncomeAccount = new Array(TermMonths);
+  const Rent_TaxAccount = new Array(TermMonths);
+  const Rent_BuyersUpFrontCostsAccount = new Array(TermMonths).fill(0);
+  const Rent_SavingsAccount = new Array(TermMonths);
+  const Rent_NetWorthAccount = new Array(TermMonths);
+  const Rent_HomePrice = new Array(TermMonths);
+
+  for (let m = 0; m < TermMonths; m++) {
+    Rent_NetIncomeAccount[m] = CombinedNetIncome[m];
+    Rent_LivingExpenseAccount[m] = (1 - IncomeSavedPortion) * CombinedNetIncome[m];
+    Rent_RentExpenseAccount[m] = RentExpenseAccount[m];
+    Rent_SavedIncomeAccount[m] = CombinedSavedNetIncomeAfterRent[m];
+    Rent_InterestIncomeAccount[m] = (m === 0) ? 0 : (BankAnnualInterestRate / 12) * Rent_SavingsAccount[m - 1];
+    Rent_TaxAccount[m] = BankInterestTaxRate * Rent_InterestIncomeAccount[m];
+    Rent_BuyersUpFrontCostsAccount[m] = (m === FinalMonth) ? BuyersUpFrontCosts : 0;
+    const prev = (m === 0) ? BankStartingSavings : Rent_SavingsAccount[m - 1];
+    Rent_SavingsAccount[m] = prev + Rent_SavedIncomeAccount[m] + Rent_InterestIncomeAccount[m] - Rent_TaxAccount[m] - Rent_BuyersUpFrontCostsAccount[m];
+    Rent_NetWorthAccount[m] = Rent_SavingsAccount[m];
+  }
+  for (let m = 0; m < TermMonths; m++) {
+    Rent_HomePrice[m] = Math.pow(1 + HomeValueAnnualGrowthRate, (m - FinalMonth) / 12) * Rent_SavingsAccount[FinalMonth];
+  }
+
+  // ---- MORTGAGE SCENARIO ----
+  const Mortgage_SavedIncomeAccount = new Array(TermMonths);
+  const Mortgage_InterestIncomeAccount = new Array(TermMonths).fill(0);
+  const Mortgage_TaxAccount = new Array(TermMonths).fill(0);
+  const Mortgage_BuyersUpFrontCostsAccount = new Array(TermMonths).fill(0);
+  const Mortgage_WithdrawalAccount = new Array(TermMonths).fill(0);
+  const Mortgage_SavingsAccount = new Array(TermMonths).fill(0);
+  const Mortgage_PresentValueAccount = new Array(TermMonths).fill(0);
+  const Mortgage_InterestExpenseAccount = new Array(TermMonths).fill(0);
+  const Mortgage_PaymentAccount = new Array(TermMonths).fill(0);
+  const Mortgage_PrincipalAccount = new Array(TermMonths).fill(0);
+  const Mortgage_OffsetPaymentAccount = new Array(TermMonths).fill(0);
+  const Mortgage_OffsetAccount = new Array(TermMonths).fill(0);
+  const Mortgage_HomeValue = new Array(TermMonths).fill(0);
+  const Mortgage_NetWorthAccount = new Array(TermMonths).fill(0);
+  const Mortgage_HomeDepositPrice = new Array(TermMonths).fill(0);
+  const Mortgage_HomePrice = new Array(TermMonths).fill(0);
+
+  // Pass 1
+  for (let m = 0; m < TermMonths; m++) {
+    Mortgage_SavedIncomeAccount[m] = CombinedSavedNetIncome[m];
+    Mortgage_InterestIncomeAccount[m] = (m === 0) ? 0 : (BankAnnualInterestRate / 12) * Mortgage_SavingsAccount[m - 1];
+    Mortgage_TaxAccount[m] = BankInterestTaxRate * Mortgage_InterestIncomeAccount[m];
+    Mortgage_BuyersUpFrontCostsAccount[m] = 0;
+    Mortgage_WithdrawalAccount[m] = 0;
+    const prev = (m === 0) ? p.cs : Mortgage_SavingsAccount[m - 1];
+    Mortgage_SavingsAccount[m] = prev + Mortgage_SavedIncomeAccount[m] + Mortgage_InterestIncomeAccount[m] - Mortgage_TaxAccount[m];
+    Mortgage_HomeValue[m] = 0;
+  }
+
+  // Pass 2: PresentValue
+  for (let m = 0; m < TermMonths; m++) {
+    Mortgage_PresentValueAccount[m] = PresentValue(
+      (MortgageAnnualInterestRate + APRAServiceabilityBuffer) / 12,
+      FinalMonth - m,
+      Mortgage_SavedIncomeAccount[m],
+      0
+    );
+  }
+
+  // Find EarliestMonth
+  let EarliestMonth = FinalMonth;
+  if (ExistingHomeValueParamCopy > 0) {
+    EarliestMonth = FirstMonth;
+  } else {
+    for (let m = 0; m < TermMonths; m++) {
+      if (Mortgage_SavingsAccount[m] >= (HomeValueDepositPortion / (1 - HomeValueDepositPortion)) * Mortgage_PresentValueAccount[m] + BuyersUpFrontCosts) {
+        EarliestMonth = m;
+        break;
+      }
+    }
+  }
+
+  // Home purchase at EarliestMonth
+  const upfront = (ExistingHomeValueParamCopy > 0) ? 0 : BuyersUpFrontCosts;
+  const HomeDepositAmount = Mortgage_SavingsAccount[EarliestMonth] - upfront;
+  Mortgage_BuyersUpFrontCostsAccount[EarliestMonth] = upfront;
+  Mortgage_WithdrawalAccount[EarliestMonth] = HomeDepositAmount;
+  Mortgage_SavingsAccount[EarliestMonth] = 0;
+
+  Mortgage_HomeValue[EarliestMonth] = (ExistingHomeValueParamCopy > 0)
+    ? ExistingHomeValueParamCopy
+    : (HomeDepositAmount + Mortgage_PresentValueAccount[EarliestMonth]);
+
+  for (let m = EarliestMonth + 1; m < TermMonths; m++) {
+    Mortgage_HomeValue[m] = Math.pow(1 + HomeValueAnnualGrowthRate, (m - EarliestMonth) / 12) * Mortgage_HomeValue[EarliestMonth];
+  }
+
+  const MortgageFixedPaymentAmount = CombinedSavedNetIncome[EarliestMonth];
+
+  Mortgage_InterestExpenseAccount[EarliestMonth] = 0;
+  Mortgage_PaymentAccount[EarliestMonth] = 0;
+  Mortgage_PrincipalAccount[EarliestMonth] = (ExistingHomeValueParamCopy > 0)
+    ? ExistingMortgagePrincipalParamCopy
+    : Mortgage_PresentValueAccount[EarliestMonth];
+  Mortgage_OffsetPaymentAccount[EarliestMonth] = 0;
+  Mortgage_OffsetAccount[EarliestMonth] = 0;
+
+  // Pass 3: repayment loop
+  for (let m = EarliestMonth + 1; m < TermMonths; m++) {
+    Mortgage_SavedIncomeAccount[m] = CombinedSavedNetIncome[m];
+    Mortgage_InterestIncomeAccount[m] = (BankAnnualInterestRate / 12) * Mortgage_SavingsAccount[m - 1];
+    Mortgage_TaxAccount[m] = BankInterestTaxRate * Mortgage_InterestIncomeAccount[m];
+    const AvailableCash = Mortgage_SavingsAccount[m - 1] + Mortgage_SavedIncomeAccount[m] + Mortgage_InterestIncomeAccount[m] - Mortgage_TaxAccount[m] - Mortgage_BuyersUpFrontCostsAccount[m];
+    const RemainingPrincipalPlusMonthInterest = (Mortgage_PrincipalAccount[m - 1] - Mortgage_OffsetAccount[m - 1]) * (1 + MortgageAnnualInterestRate / 12);
+    const MortgageActualPaymentAmount = Math.max(0, Math.min(AvailableCash, RemainingPrincipalPlusMonthInterest));
+    Mortgage_WithdrawalAccount[m] = MortgageActualPaymentAmount;
+
+    if (MortgageActualPaymentAmount > 0) {
+      Mortgage_InterestExpenseAccount[m] = (Mortgage_PrincipalAccount[m - 1] - Mortgage_OffsetAccount[m - 1]) * (MortgageAnnualInterestRate / 12);
+      let MortgageActualOffsetAmount;
+      if (MortgageActualPaymentAmount >= MortgageFixedPaymentAmount) {
+        Mortgage_PaymentAccount[m] = MortgageFixedPaymentAmount;
+        MortgageActualOffsetAmount = MortgageActualPaymentAmount - MortgageFixedPaymentAmount;
+      } else {
+        Mortgage_PaymentAccount[m] = 0;
+        MortgageActualOffsetAmount = MortgageActualPaymentAmount;
+      }
+      Mortgage_OffsetPaymentAccount[m] = MortgageActualOffsetAmount;
+      Mortgage_OffsetAccount[m] = Mortgage_OffsetAccount[m - 1] + MortgageActualOffsetAmount;
+    } else {
+      Mortgage_OffsetAccount[m] = Mortgage_OffsetAccount[m - 1];
+    }
+
+    Mortgage_SavingsAccount[m] = Mortgage_SavingsAccount[m - 1] + Mortgage_SavedIncomeAccount[m] + Mortgage_InterestIncomeAccount[m] - Mortgage_TaxAccount[m] - Mortgage_BuyersUpFrontCostsAccount[m] - Mortgage_WithdrawalAccount[m];
+    Mortgage_PrincipalAccount[m] = Mortgage_PrincipalAccount[m - 1] + Mortgage_InterestExpenseAccount[m] - Mortgage_PaymentAccount[m];
+  }
+
+  // Find MortgageLastMonth
+  let MortgageLastMonth = FinalMonth;
+  for (let m = EarliestMonth + 1; m < TermMonths; m++) {
+    if ((Mortgage_PrincipalAccount[m] - Mortgage_OffsetAccount[m]) <= 0) {
+      MortgageLastMonth = m;
+      break;
+    }
+  }
+
+  // HomePrice, HomeDepositPrice, NetWorth
+  for (let m = 0; m < TermMonths; m++) {
+    Mortgage_HomePrice[m] = Math.pow(1 + HomeValueAnnualGrowthRate, (m - EarliestMonth) / 12) * Mortgage_HomeValue[EarliestMonth];
+    Mortgage_HomeDepositPrice[m] = HomeValueDepositPortion * Mortgage_HomePrice[m];
+    if (m > MortgageLastMonth) {
+      Mortgage_NetWorthAccount[m] = Mortgage_SavingsAccount[m] + Mortgage_HomeValue[m];
+    } else {
+      Mortgage_NetWorthAccount[m] = Mortgage_SavingsAccount[m] + Mortgage_HomeValue[m] - Mortgage_PrincipalAccount[m] + Mortgage_OffsetAccount[m];
+    }
+  }
+
+  // RentCrossMonth
+  let RentCrossMonth = FinalMonth;
+  for (let m = 0; m < TermMonths; m++) {
+    if (Rent_NetWorthAccount[m] >= Mortgage_HomeDepositPrice[m]) {
+      RentCrossMonth = m;
+      break;
+    }
+  }
+
+  return {
+    TermMonths, FirstMonth, FinalMonth,
+    EarliestMonth, MortgageLastMonth, RentCrossMonth,
+    Bank_NetIncomeAccount, Bank_LivingExpenseAccount, Bank_SavedIncomeAccount,
+    Bank_InterestIncomeAccount, Bank_TaxAccount, Bank_BuyersUpFrontCostsAccount,
+    Bank_SavingsAccount, Bank_NetWorthAccount, Bank_HomePrice,
+    Rent_NetIncomeAccount, Rent_LivingExpenseAccount, Rent_RentExpenseAccount,
+    Rent_SavedIncomeAccount, Rent_InterestIncomeAccount, Rent_TaxAccount,
+    Rent_BuyersUpFrontCostsAccount, Rent_SavingsAccount, Rent_NetWorthAccount, Rent_HomePrice,
+    Mortgage_SavedIncomeAccount, Mortgage_InterestIncomeAccount, Mortgage_TaxAccount,
+    Mortgage_BuyersUpFrontCostsAccount, Mortgage_WithdrawalAccount, Mortgage_SavingsAccount,
+    Mortgage_InterestExpenseAccount, Mortgage_PaymentAccount, Mortgage_PrincipalAccount,
+    Mortgage_OffsetPaymentAccount, Mortgage_OffsetAccount, Mortgage_HomeValue,
+    Mortgage_NetWorthAccount, Mortgage_HomeDepositPrice, Mortgage_HomePrice
+  };
+}
+
+// ============================================================
+// CHART
+// ============================================================
+const ChartHeightViewportPercent = 45;
+const ChartHeightMaxPx = 1024;
+const ChartHeightMinPx = 256;
+
+const SERIES = [
+  { key: 'Bank_NetWorth',            label: 'Bank Net Worth',            color: '#1a6fc4', dash: [] },
+  { key: 'Rent_NetWorth',            label: 'Rent Net Worth',            color: '#7b4dbd', dash: [] },
+  { key: 'Mortgage_NetWorth',        label: 'Mortgage Net Worth',        color: '#2a9d4e', dash: [] },
+  { key: 'Mortgage_HomePrice',       label: 'Mortgage Home Price',       color: '#c0392b', dash: [] },
+  { key: 'Mortgage_HomeDepositPrice',label: 'Mortgage Deposit Price',    color: '#e67e22', dash: [6,4] },
+];
+
+function getSeriesData(c, key) {
+  if (key === 'Bank_NetWorth')             return c.Bank_NetWorthAccount;
+  if (key === 'Rent_NetWorth')             return c.Rent_NetWorthAccount;
+  if (key === 'Mortgage_NetWorth')         return c.Mortgage_NetWorthAccount;
+  if (key === 'Mortgage_HomePrice')        return c.Mortgage_HomePrice;
+  if (key === 'Mortgage_HomeDepositPrice') return c.Mortgage_HomeDepositPrice;
+  return [];
+}
+
+function niceTickInterval(range, minTicks, maxTicks, allowedMultipliers, bases) {
+  for (const b of bases) {
+    for (const m of allowedMultipliers) {
+      const interval = b * m;
+      const count = Math.floor(range / interval);
+      if (count >= minTicks && count <= maxTicks) return interval;
+    }
+  }
+  return bases[bases.length - 1] * allowedMultipliers[allowedMultipliers.length - 1];
+}
+
+function renderChart(c) {
+  const container = document.getElementById('chart-container');
+  const canvas = document.getElementById('myChart');
+  const overlay = document.getElementById('crosshairCanvas');
+
+  const targetH = Math.max(ChartHeightMinPx, Math.min(ChartHeightMaxPx, window.innerHeight * ChartHeightViewportPercent / 100));
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = container.clientWidth;
+  const cssH = targetH;
+
+  canvas.style.width = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  overlay.style.width = cssW + 'px';
+  overlay.style.height = cssH + 'px';
+  overlay.width = Math.round(cssW * dpr);
+  overlay.height = Math.round(cssH * dpr);
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const octx = overlay.getContext('2d');
+  octx.scale(dpr, dpr);
+  octx.clearRect(0, 0, cssW, cssH);
+
+  // Layout
+  const PAD_LEFT = 75, PAD_RIGHT = 20, PAD_TOP = 20, PAD_BOTTOM = 75;
+  const plotW = cssW - PAD_LEFT - PAD_RIGHT;
+  const plotH = cssH - PAD_TOP - PAD_BOTTOM;
+
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const N = c.TermMonths;
+  const months = Array.from({length: N}, (_, i) => i);
+
+  // Y range
+  let yMin = 0, yMax = 0;
+  for (const s of SERIES) {
+    const data = getSeriesData(c, s.key);
+    for (const v of data) {
+      if (isFinite(v)) { yMax = Math.max(yMax, v); yMin = Math.min(yMin, v); }
+    }
+  }
+  yMin = Math.min(0, yMin);
+
+  // Y ticks
+  const yRange = yMax - yMin;
+  const yBases = [1,10,100,1000,10000,100000,1000000,10000000];
+  const yMults = [1,2,5];
+  let yInterval = 1;
+  outer: for (const b of yBases) {
+    for (const m of yMults) {
+      const iv = b * m;
+      const cnt = Math.floor(yRange / iv);
+      if (cnt >= 5 && cnt <= 10) { yInterval = iv; break outer; }
+    }
+  }
+  const yTickStart = Math.floor(yMin / yInterval) * yInterval;
+  const yTicks = [];
+  for (let v = yTickStart; v <= yMax + yInterval; v += yInterval) {
+    if (v >= yMin - 1e-9 && v <= yMax + yInterval + 1e-9) yTicks.push(v);
+  }
+
+  // X ticks
+  const xRange = c.FinalMonth - c.FirstMonth;
+  const xAllowed = [];
+  for (let base of [1,2,3,6,9,12,18,24,36,48,60]) xAllowed.push(base);
+  let xInterval = 1;
+  for (const iv of xAllowed) {
+    const cnt = Math.floor(xRange / iv);
+    if (cnt >= 5 && cnt <= 10) { xInterval = iv; break; }
+  }
+  const halfIv = xInterval / 2;
+  const xTicks = [];
+  for (let m = 0; m <= c.FinalMonth; m += xInterval) {
+    if (Math.abs(m - c.FinalMonth) > halfIv) xTicks.push(m);
+  }
+  xTicks.push(c.FinalMonth); // always include Term
+
+  function xPx(m) { return PAD_LEFT + (m / (N - 1)) * plotW; }
+  function yPx(v) { return PAD_TOP + plotH - ((v - yMin) / (yRange || 1)) * plotH; }
+
+  // Background
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, cssW, cssH);
+
+  // Grid lines
+  ctx.strokeStyle = '#e8e8e8';
+  ctx.lineWidth = 1;
+  for (const y of yTicks) {
+    const py = yPx(y);
+    ctx.beginPath(); ctx.moveTo(PAD_LEFT, py); ctx.lineTo(PAD_LEFT + plotW, py); ctx.stroke();
+  }
+  for (const m of xTicks) {
+    const px = xPx(m);
+    ctx.beginPath(); ctx.moveTo(px, PAD_TOP); ctx.lineTo(px, PAD_TOP + plotH); ctx.stroke();
+  }
+
+  // Plot border
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(PAD_LEFT, PAD_TOP, plotW, plotH);
+
+  // Y axis labels
+  ctx.fillStyle = '#555';
+  ctx.font = '11px -apple-system, Arial, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (const y of yTicks) {
+    ctx.fillText(fmtK(y), PAD_LEFT - 5, yPx(y));
+  }
+
+  // X axis labels
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (const m of xTicks) {
+    const px = xPx(m);
+    const isTerm = (m === c.FinalMonth);
+    ctx.font = isTerm ? 'bold 11px -apple-system, Arial, sans-serif' : '11px -apple-system, Arial, sans-serif';
+    ctx.fillStyle = '#555';
+    ctx.fillText(m, px, PAD_TOP + plotH + 3);
+  }
+
+  // X axis title
+  ctx.font = '12px -apple-system, Arial, sans-serif';
+  ctx.fillStyle = '#444';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('Months', PAD_LEFT + plotW / 2, PAD_TOP + plotH + 18);
+
+  // Draw series
+  for (const s of SERIES) {
+    const data = getSeriesData(c, s.key);
+    ctx.beginPath();
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = 2;
+    if (s.dash.length) ctx.setLineDash(s.dash);
+    else ctx.setLineDash([]);
+    let started = false;
+    for (let m = 0; m < N; m++) {
+      const v = data[m];
+      if (!isFinite(v)) continue;
+      const px = xPx(m), py = yPx(v);
+      if (!started) { ctx.moveTo(px, py); started = true; }
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Vertical event lines
+  function drawVLine(m, color, label) {
+    if (m < 0 || m >= N) return;
+    const px = xPx(m);
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(px, PAD_TOP); ctx.lineTo(px, PAD_TOP + plotH); ctx.stroke();
+    ctx.setLineDash([]);
+    // Label rotated -90deg, last char at top of plot
+    ctx.translate(px, PAD_TOP);
+    ctx.rotate(-Math.PI / 2);
+    ctx.font = '11px -apple-system, Arial, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    const tw = ctx.measureText(label);
+    // white bg
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fillRect(-tw.width - 4, -7, tw.width + 4, 14);
+    ctx.fillStyle = color;
+    ctx.fillText(label, 0, 0);
+    ctx.restore();
+  }
+
+  drawVLine(c.EarliestMonth, '#c0392b', 'Mortgage Started');
+  drawVLine(c.MortgageLastMonth, '#c0392b', 'Mortgage Paid Off');
+  if (c.RentCrossMonth < c.FinalMonth) {
+    drawVLine(c.RentCrossMonth, '#7b4dbd', 'Rent Can Start Mortgage');
+  }
+
+  // Legend
+  const legendY = PAD_TOP + plotH + 48;
+  const legendItems = SERIES;
+  let lx = PAD_LEFT;
+  ctx.font = '11px -apple-system, Arial, sans-serif';
+  ctx.textBaseline = 'middle';
+  for (const s of legendItems) {
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = 2;
+    if (s.dash.length) ctx.setLineDash(s.dash);
+    ctx.beginPath(); ctx.moveTo(lx, legendY); ctx.lineTo(lx + 22, legendY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText(s.label, lx + 26, legendY);
+    lx += ctx.measureText(s.label).width + 50;
+    if (lx > cssW - 100) { lx = PAD_LEFT; }
+  }
+
+  // Store layout for crosshair/tooltip
+  canvas._chartLayout = { PAD_LEFT, PAD_RIGHT, PAD_TOP, PAD_BOTTOM, plotW, plotH, N, c, xPx, yPx, cssW, cssH };
+}
+
+function fmtK(v) {
+  const av = Math.abs(v);
+  if (av >= 1e9) return (v/1e9).toFixed(1) + 'B';
+  if (av >= 1e6) return (v/1e6).toFixed(1) + 'M';
+  if (av >= 1e3) return (v/1e3).toFixed(0) + 'k';
+  return v.toFixed(0);
+}
+
+// Crosshair + tooltip
+let lastHoveredMonth = -1;
+
+function setupChartEvents() {
+  const canvas = document.getElementById('myChart');
+  const overlay = document.getElementById('crosshairCanvas');
+  const tooltip = document.getElementById('chart-tooltip');
+
+  canvas.addEventListener('mousemove', (e) => {
+    const layout = canvas._chartLayout;
+    if (!layout) return;
+    const rect = canvas.getBoundingClientRect();
+    const cssX = e.clientX - rect.left;
+    const { PAD_LEFT, plotW, N } = layout;
+    if (cssX < PAD_LEFT || cssX > PAD_LEFT + plotW) {
+      clearOverlay(); tooltip.style.display = 'none'; lastHoveredMonth = -1; return;
+    }
+    const frac = (cssX - PAD_LEFT) / plotW;
+    const m = Math.round(frac * (N - 1));
+    if (m === lastHoveredMonth) return;
+    lastHoveredMonth = m;
+    drawCrosshair(layout, m);
+    showTooltip(layout, m, e.clientX, e.clientY);
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    clearOverlay();
+    tooltip.style.display = 'none';
+    lastHoveredMonth = -1;
+  });
+}
+
+function clearOverlay() {
+  const overlay = document.getElementById('crosshairCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const octx = overlay.getContext('2d');
+  octx.clearRect(0, 0, overlay.width / dpr, overlay.height / dpr);
+}
+
+function drawCrosshair(layout, m) {
+  const overlay = document.getElementById('crosshairCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const octx = overlay.getContext('2d');
+  octx.clearRect(0, 0, layout.cssW, layout.cssH);
+  octx.save();
+  octx.strokeStyle = 'rgba(0,0,0,0.25)';
+  octx.lineWidth = 1;
+  octx.setLineDash([4, 3]);
+  const px = layout.xPx(m);
+  octx.beginPath();
+  octx.moveTo(px, layout.PAD_TOP);
+  octx.lineTo(px, layout.PAD_TOP + layout.plotH);
+  octx.stroke();
+  octx.restore();
+}
+
+function showTooltip(layout, m, clientX, clientY) {
+  const tooltip = document.getElementById('chart-tooltip');
+  const c = layout.c;
+  const lines = ['Month ' + m + '\n'];
+  const labelW = 26;
+  for (const s of SERIES) {
+    const data = getSeriesData(c, s.key);
+    const v = data[m];
+    if (isFinite(v)) {
+      lines.push(s.label.padEnd(labelW) + fmt2(v).padStart(14));
+    }
+  }
+  tooltip.textContent = lines.join('\n');
+  tooltip.style.display = 'block';
+  const tw = 280, th = 130;
+  let tx = clientX + 14, ty = clientY - 10;
+  if (tx + tw > window.innerWidth) tx = clientX - tw - 14;
+  if (ty + th > window.innerHeight) ty = clientY - th - 10;
+  tooltip.style.left = tx + 'px';
+  tooltip.style.top = ty + 'px';
+}
+
+// ============================================================
+// TABLES
+// ============================================================
+function fmt2(v) {
+  if (!isFinite(v)) return '—';
+  return v.toFixed(2);
+}
+
+function buildTable(tableEl, headers, rows) {
+  tableEl.innerHTML = '';
+  const thead = tableEl.createTHead();
+  const tr = thead.insertRow();
+  for (const h of headers) {
+    const th = document.createElement('th');
+    th.textContent = h;
+    tr.appendChild(th);
+  }
+  const tbody = tableEl.createTBody();
+  for (const row of rows) {
+    const tr2 = tbody.insertRow();
+    if (row._class) tr2.className = row._class;
+    if (row._id) tr2.id = row._id;
+    for (const cell of row.cells) {
+      const td = tr2.insertCell();
+      td.textContent = cell;
+    }
+  }
+}
+
+function renderTables(c) {
+  // Bank
+  const bankHeaders = ['Month','Net Income','Living Exp','Saved Inc','Interest Inc','Tax','Up Front','Savings','Net Worth','Home Price'];
+  const bankRows = [];
+  for (let m = 0; m < c.TermMonths; m++) {
+    bankRows.push({ cells: [
+      m,
+      fmt2(c.Bank_NetIncomeAccount[m]),
+      fmt2(c.Bank_LivingExpenseAccount[m]),
+      fmt2(c.Bank_SavedIncomeAccount[m]),
+      fmt2(c.Bank_InterestIncomeAccount[m]),
+      fmt2(c.Bank_TaxAccount[m]),
+      fmt2(c.Bank_BuyersUpFrontCostsAccount[m]),
+      fmt2(c.Bank_SavingsAccount[m]),
+      fmt2(c.Bank_NetWorthAccount[m]),
+      fmt2(c.Bank_HomePrice[m]),
+    ]});
+  }
+  buildTable(document.getElementById('tbl-bank'), bankHeaders, bankRows);
+
+  // Rent
+  const rentHeaders = ['Month','Net Income','Living Exp','Rent Exp','Saved Inc','Interest Inc','Tax','Up Front','Savings','Net Worth','Home Price'];
+  const rentRows = [];
+  for (let m = 0; m < c.TermMonths; m++) {
+    rentRows.push({ cells: [
+      m,
+      fmt2(c.Rent_NetIncomeAccount[m]),
+      fmt2(c.Rent_LivingExpenseAccount[m]),
+      fmt2(c.Rent_RentExpenseAccount[m]),
+      fmt2(c.Rent_SavedIncomeAccount[m]),
+      fmt2(c.Rent_InterestIncomeAccount[m]),
+      fmt2(c.Rent_TaxAccount[m]),
+      fmt2(c.Rent_BuyersUpFrontCostsAccount[m]),
+      fmt2(c.Rent_SavingsAccount[m]),
+      fmt2(c.Rent_NetWorthAccount[m]),
+      fmt2(c.Rent_HomePrice[m]),
+    ]});
+  }
+  buildTable(document.getElementById('tbl-rent'), rentHeaders, rentRows);
+
+  // Mortgage
+  const mortHeaders = ['Month','Saved Inc','Interest Inc','Tax','Up Front','Withdrawal','Savings','Interest Exp','Payment','Principal','Offset Pmt','Offset','Home Value','Net Worth','Deposit Price','Home Price'];
+  const mortRows = [];
+  for (let m = 0; m < c.TermMonths; m++) {
+    const isEarliest = (m === c.EarliestMonth);
+    const isLast = (m === c.MortgageLastMonth);
+    let cls = '';
+    if (isEarliest && isLast) cls = 'hl-both';
+    else if (isLast) cls = 'hl-last';
+    else if (isEarliest) cls = 'hl-earliest';
+    mortRows.push({ cells: [
+      m,
+      fmt2(c.Mortgage_SavedIncomeAccount[m]),
+      fmt2(c.Mortgage_InterestIncomeAccount[m]),
+      fmt2(c.Mortgage_TaxAccount[m]),
+      fmt2(c.Mortgage_BuyersUpFrontCostsAccount[m]),
+      fmt2(c.Mortgage_WithdrawalAccount[m]),
+      fmt2(c.Mortgage_SavingsAccount[m]),
+      fmt2(c.Mortgage_InterestExpenseAccount[m]),
+      fmt2(c.Mortgage_PaymentAccount[m]),
+      fmt2(c.Mortgage_PrincipalAccount[m]),
+      fmt2(c.Mortgage_OffsetPaymentAccount[m]),
+      fmt2(c.Mortgage_OffsetAccount[m]),
+      fmt2(c.Mortgage_HomeValue[m]),
+      fmt2(c.Mortgage_NetWorthAccount[m]),
+      fmt2(c.Mortgage_HomeDepositPrice[m]),
+      fmt2(c.Mortgage_HomePrice[m]),
+    ], _class: cls, _id: isEarliest ? 'mort-row-earliest' : (isLast ? 'mort-row-last' : '') });
+  }
+  buildTable(document.getElementById('tbl-mortgage'), mortHeaders, mortRows);
+
+  // Scroll earliest into view in mortgage table
+  setTimeout(() => {
+    const el = document.getElementById('mort-row-earliest');
+    if (el) el.scrollIntoView({ block: 'nearest' });
+  }, 0);
+}
+
+// ============================================================
+// KEY RESULTS
+// ============================================================
+function renderResults(c) {
+  document.getElementById('res-living').textContent     = fmt2(c.Bank_LivingExpenseAccount[c.FirstMonth]);
+  document.getElementById('res-bank-hp0').textContent   = fmt2(c.Bank_HomePrice[c.FirstMonth]);
+  document.getElementById('res-mort-hp0').textContent   = fmt2(c.Mortgage_HomePrice[c.FirstMonth]);
+  document.getElementById('res-earliest').textContent   = c.EarliestMonth;
+  document.getElementById('res-bank-nw').textContent    = fmt2(c.Bank_NetWorthAccount[c.FinalMonth]);
+  document.getElementById('res-rent-nw').textContent    = fmt2(c.Rent_NetWorthAccount[c.FinalMonth]);
+  document.getElementById('res-mort-nw').textContent    = fmt2(c.Mortgage_NetWorthAccount[c.FinalMonth]);
+  document.getElementById('res-rentcross').textContent  = c.RentCrossMonth;
+}
+
+// ============================================================
+// PARAMS / VALIDATION / STORAGE
+// ============================================================
+function getInputs() {
+  return {
+    tm: parseFloat(document.getElementById('inp-tm').value),
+    cs: parseFloat(document.getElementById('inp-cs').value),
+    r1: parseFloat(document.getElementById('inp-r1').value),
+    r2: parseFloat(document.getElementById('inp-r2').value),
+    sp: parseFloat(document.getElementById('inp-sp').value),
+    ig: parseFloat(document.getElementById('inp-ig').value),
+    bi: parseFloat(document.getElementById('inp-bi').value),
+    bt: parseFloat(document.getElementById('inp-bt').value),
+    dp: parseFloat(document.getElementById('inp-dp').value),
+    mi: parseFloat(document.getElementById('inp-mi').value),
+    sb: parseFloat(document.getElementById('inp-sb').value),
+    hv: parseFloat(document.getElementById('inp-hv').value),
+    mp: parseFloat(document.getElementById('inp-mp').value),
+    uc: parseFloat(document.getElementById('inp-uc').value),
+    hg: parseFloat(document.getElementById('inp-hg').value),
+    re: parseFloat(document.getElementById('inp-re').value),
+  };
+}
+
+function setInputsFromObj(p) {
+  for (const k of URL_KEYS) {
+    const el = document.getElementById('inp-' + k);
+    if (el && p[k] !== undefined) el.value = p[k];
+  }
+}
+
+function validate(p) {
+  const errs = [];
+  if (!Number.isInteger(p.tm) || p.tm < 1 || p.tm > 480)
+    errs.push('Term must be a whole number between 1 and 480 (1 month to 40 years).');
+  if (p.r1 < 0) errs.push('Resident 1 Gross Annual Income must be >= 0.');
+  if (p.r2 < 0) errs.push('Resident 2 Gross Annual Income must be >= 0.');
+  if (p.sp < 0 || p.sp > 100) errs.push('Income Saved Portion must be between 0% and 100%.');
+  for (const [k, label] of [['ig','Combined Saved Net Income Annual Growth Rate'],['bi','Bank Annual Interest Rate'],['bt','Bank Interest Tax Rate'],['dp','Home Value Deposit Portion'],['mi','Mortgage Annual Interest Rate'],['sb','APRA Serviceability Buffer'],['hg','Home Value Annual Growth Rate']]) {
+    if (p[k] < -100 || p[k] > 100) errs.push(label + ' must be between -100% and 100%.');
+  }
+  for (const [k, label] of [['cs','Combined Savings at Month 0'],['hv','Existing Home Value'],['mp','Existing Mortgage Principal'],['uc','Buyers Up Front Costs'],['re','Rent Expense Annually']]) {
+    if (p[k] < 0) errs.push(label + ' must be >= 0.');
+  }
+  if (p.mp > p.hv) errs.push('Existing Mortgage Principal cannot exceed Existing Home Value.');
+  return errs;
+}
+
+function buildURL(p) {
+  const base = window.location.href.split('?')[0];
+  const qs = URL_KEYS.map(k => k + '=' + encodeURIComponent(p[k])).join('&');
+  return base + '?' + qs;
+}
+
+function parseURLParams() {
+  const params = new URLSearchParams(window.location.search);
+  const obj = {};
+  let found = false;
+  for (const k of URL_KEYS) {
+    if (params.has(k)) { obj[k] = parseFloat(params.get(k)); found = true; }
+  }
+  return found ? obj : null;
+}
+
+function loadFromStorage() {
+  try {
+    const s = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  return null;
+}
+
+function saveToStorage(p) {
+  try { localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(p)); } catch(e) {}
+}
+
+// ============================================================
+// RUN
+// ============================================================
+function runCalc(p) {
+  const c = calculate(p);
+  lastCalc = c;
+  renderResults(c);
+  renderChart(c);
+  renderTables(c);
+  const url = buildURL(p);
+  document.getElementById('shareable-url').value = url;
+  saveToStorage(p);
+  document.getElementById('error-msg').textContent = '';
+}
+
+// ============================================================
+// RESIZE
+// ============================================================
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (lastCalc) renderChart(lastCalc);
+  }, 50);
+});
+
+// ============================================================
+// TABS
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  setupChartEvents();
+
+  // Load params
+  const fromURL = parseURLParams();
+  const fromStorage = loadFromStorage();
+  if (fromURL) {
+    const merged = Object.assign({}, DEFAULTS, fromURL);
+    setInputsFromObj(merged);
+    runCalc(merged);
+  } else if (fromStorage) {
+    const merged = Object.assign({}, DEFAULTS, fromStorage);
+    setInputsFromObj(merged);
+    runCalc(merged);
+  } else {
+    setInputsFromObj(DEFAULTS);
+    runCalc(DEFAULTS);
+  }
+
+  document.getElementById('btn-calc').addEventListener('click', () => {
+    const p = getInputs();
+    const errs = validate(p);
+    if (errs.length) {
+      document.getElementById('error-msg').textContent = errs.join(' ');
+      return;
+    }
+    runCalc(p);
+  });
+
+  document.getElementById('btn-restore').addEventListener('click', () => {
+    setInputsFromObj(DEFAULTS);
+    document.getElementById('error-msg').textContent = '';
+    runCalc(DEFAULTS);
+  });
+
+  document.getElementById('btn-copy').addEventListener('click', () => {
+    const url = document.getElementById('shareable-url').value;
+    navigator.clipboard.writeText(url).catch(() => {});
+    const btn = document.getElementById('btn-copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+});
+</script>
+</body>
+</html>
